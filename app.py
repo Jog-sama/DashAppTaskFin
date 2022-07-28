@@ -9,6 +9,9 @@ app = Dash(__name__)
 # -- Import and clean data (importing csv into pandas)
 df = pd.read_csv("intro_bees.csv")
 
+# to only describe this particular column
+print(df['Pct of Colonies Impacted'].describe())
+
 states_df = df['State'].unique()
 period_df = df['Period'].unique()
 cause_df = df['Affected by'].unique()
@@ -16,10 +19,7 @@ cause_df = df['Affected by'].unique()
 df = df.groupby(['State', 'ANSI', 'Year', 'Period', 'Affected by', 'state_code'])[
     ['Pct of Colonies Impacted']].mean()
 df.reset_index(inplace=True)
-print(df[:50])
-
-# to only describe this particular column
-df["Pct of Colonies Impacted"].describe()
+#print(df[:50])
 
 # ------------------------------------------------------------------------------
 # App layout
@@ -128,4 +128,4 @@ def update_graph(slctd_state, slctd_year, slctd_period, slctd_cause):
 # ------------------------------------------------------------------------------
 # Running the app in a Browser Window
 if __name__ == '__main__':
-    app.run_server(debug=True, port=8080)
+    app.run_server(debug=True, port=8070)
