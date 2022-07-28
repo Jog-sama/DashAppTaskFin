@@ -1,7 +1,7 @@
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from dash import Dash, dcc, html, Input, Output
+from dash import Dash, dcc, html, Input, Output, dash_table
 
 
 app = Dash(__name__)
@@ -28,45 +28,54 @@ app.layout = html.Div([
     html.H1("Web Application Dashboards with Dash",
             style={'text-align': 'center'}),
 
-    dcc.Dropdown(id="slct_state",
-                 options=[
-                    {'label': i, 'value': i} for i in states_df],
-                 multi=False,
-                 value='Alabama',
-                 style={'width': "40%"}
-                 ),
+    dash_table.DataTable(
+        data=df.to_dict('records'),
+        columns=[{"name": i, "id": i} for i in df.columns]
+    ),
 
-    dcc.Dropdown(id="slct_year",
-                 options=[
-                     {"label": "2015", "value": 2015},
-                     {"label": "2016", "value": 2016},
-                     {"label": "2017", "value": 2017},
-                     {"label": "2018", "value": 2018}],
-                 multi=False,
-                 value=2015,
-                 style={'width': "40%"}
-                 ),
+    html.Div([
+        dcc.Dropdown(id="slct_state",
+                     options=[
+                         {'label': i, 'value': i} for i in states_df],
+                     multi=False,
+                     value='Alabama',
+                     style={'width': "40%"}
+                     ),
 
-    dcc.Dropdown(id="slct_period",
-                 options=[
-                     {'label': i, 'value': i} for i in period_df],
-                 multi=False,
-                 value="JAN THRU MAR",
-                 style={'width': "40%"}
-                 ),
+        dcc.Dropdown(id="slct_year",
+                     options=[
+                         {"label": "2015", "value": 2015},
+                         {"label": "2016", "value": 2016},
+                         {"label": "2017", "value": 2017},
+                         {"label": "2018", "value": 2018}],
+                     multi=False,
+                     value=2015,
+                     style={'width': "40%"}
+                     ),
 
-    dcc.Dropdown(id="slct_cause",
-                 options=[
-                     {'label': i, 'value': i} for i in cause_df],
-                 multi=False,
-                 value="Varroa_mites",
-                 style={'width': "40%"}
-                 ),
+        dcc.Dropdown(id="slct_period",
+                     options=[
+                         {'label': i, 'value': i} for i in period_df],
+                     multi=False,
+                     value="JAN THRU MAR",
+                     style={'width': "40%"}
+                     ),
+
+        dcc.Dropdown(id="slct_cause",
+                     options=[
+                         {'label': i, 'value': i} for i in cause_df],
+                     multi=False,
+                     value="Varroa_mites",
+                     style={'width': "40%"}
+                     ),
+    ], style=dict(display='flex')),
+    
 
     html.Div(id='output_container1', children=[]),
     html.Div(id='output_container2', children=[]),
     html.Div(id='output_container3', children=[]),
     html.Div(id='output_container4', children=[]),
+
     html.Br(),
 
     dcc.Graph(id='my_bee_map', figure={})
@@ -122,7 +131,7 @@ def update_graph(slctd_state, slctd_year, slctd_period, slctd_cause):
         template='plotly_dark'
     )
 
-    return container1, container2, container3, container4, fig
+    return container1, container2, container3, container4,fig
 
 
 # ------------------------------------------------------------------------------
